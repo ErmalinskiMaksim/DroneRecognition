@@ -1,37 +1,35 @@
 #include "../headers/TwoFrameMaskDetector.h"
 #include "opencv2/imgproc.hpp"
 
-TwoFrameMaskDetector::TwoFrameMaskDetector(const cv::Mat& mask)
-	: m_buffer{}
+TwoFrameMaskDetector::TwoFrameMaskDetector(const cv::Mat& staticMask, const cv::Mat& dynamicMask)
+	: m_dynamicDiff{}, m_staticDiff{}
 {
-	cv::Mat gray;
-	cv::cvtColor(mask, gray, cv::COLOR_BGR2GRAY);
-	cv::bilateralFilter(gray, m_mask, 9, 50, 50);
+	cv::cvtColor(staticMask, m_staticMask, cv::COLOR_BGR2GRAY);
+	cv::cvtColor(dynamicMask, m_dynamicMask, cv::COLOR_BGR2GRAY);
 }
 
-const cv::Mat& TwoFrameMaskDetector::getBuffer() const
+cv::Mat TwoFrameMaskDetector::run(const cv::Mat& frame)
 {
-	return m_buffer;
-}
+	cv::Mat frameGray;
+	cv::Mat filtered;
+	cv::cvtColor(frame, frameGray, cv::COLOR_BGR2GRAY);
+	cv::absdiff(m_staticMask, frameGray, m_staticDiff);
+	cv::threshold(m_staticDiff, m_staticDiff, 100, 250, 0);
 
-void TwoFrameMaskDetector::setMask(const cv::Mat& mask)
-{
-	m_mask.release();
-	mask.copyTo(m_mask);
-}
+	cv::absdiff(m_dynamicMask, frameGray, m_dynamicDiff);
+	frameGray.copyTo(m_dynamicMask);
 
-void TwoFrameMaskDetector::thresholdBuffer(double sigma1, double sigma2, int type)
-{
-	cv::threshold(m_buffer, m_buffer, sigma1, sigma2, type);
-}
-
-void TwoFrameMaskDetector::getDifference(const cv::Mat& mask)
-{
-	m_buffer.release();
-	cv::absdiff(m_mask, mask, m_buffer);
+	cv::multiply(m_staticDiff, m_dynamicDiff, filtered);
+	//cv::GaussianBlur(frameGray, frame, { 11, 11 }, 0);
+	cv::threshold(filtered, filtered, 50, 250, 0);
+	//cv::threshold(m_dynamicDiff, m_dynamicDiff, 50, 250, 0);
+	return filtered;
 }
 
 TwoFrameMaskDetector::~TwoFrameMaskDetector()
 {
-	m_buffer.release(); m_mask.release();
+	m_dynamicDiff.release();
+	m_staticDiff.release();
+	m_dynamicMask.release();
+	m_staticMask.release();
 }

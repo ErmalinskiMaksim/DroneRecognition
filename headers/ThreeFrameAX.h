@@ -12,7 +12,7 @@ public:
 	ThreeFrameAX(ThreeFrameAX&&) = delete;
 	~ThreeFrameAX();
 	// accepts 3-channel images and internally converts them to 1-channel gray
-	ThreeFrameAX(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
+	explicit ThreeFrameAX(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
 	cv::Mat run() override;
 private:
 	cv::Mat m_and12;

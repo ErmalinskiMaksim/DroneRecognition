@@ -1,5 +1,6 @@
 #include "../headers/ThreeFrameOO.h"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
 ThreeFrameOO::ThreeFrameOO(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third) 
 	: m_subtractor(cv::createBackgroundSubtractorMOG2())
@@ -14,8 +15,12 @@ cv::Mat ThreeFrameOO::run()
 	m_subtractor->apply(m_currentFrame, m_fgMask);
 	cv::bitwise_or(m_diff12, m_diff23, m_or12);
 	cv::bitwise_or(m_or12, m_fgMask, m_or23);
-	cv::medianBlur(m_or23, filtered, 7);
-	cv::threshold(filtered, filtered, 180, 255, 0);
+	//cv::GaussianBlur(m_or23, filtered, { 3, 3 }, 0);
+	cv::blur(m_or23, filtered, { 5, 5 });
+	cv::threshold(filtered, filtered, 125, 255, 0);
+	cv::imshow("threshold", filtered);
+	cv::dilate(filtered, filtered, cv::getStructuringElement(cv::MORPH_CROSS, {7, 7})); // CROSS or ELLIPSE
+	cv::imshow("dilated", filtered);
 	return filtered;
 }
 

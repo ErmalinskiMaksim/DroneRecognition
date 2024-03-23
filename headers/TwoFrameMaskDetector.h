@@ -6,15 +6,16 @@
 class TwoFrameMaskDetector
 {
 public:
-	TwoFrameMaskDetector(const cv::Mat& mask);
-	const cv::Mat& getBuffer() const;
-	void setMask(const cv::Mat& mask);
-	void thresholdBuffer(double sigma1, double sigma2, int type);
-	void getDifference(const cv::Mat& mask);
+	TwoFrameMaskDetector() = delete;
+	explicit TwoFrameMaskDetector(const cv::Mat& staticMask, const cv::Mat& dynamicMask);
 	~TwoFrameMaskDetector();
+
+	cv::Mat run(const cv::Mat& frame);
 private:
-	cv::Mat m_mask;
-	cv::Mat m_buffer;
+	cv::Mat m_staticMask;
+	cv::Mat m_dynamicMask;
+	cv::Mat m_staticDiff;
+	cv::Mat m_dynamicDiff;
 };
 
 #endif

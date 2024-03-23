@@ -10,5 +10,6 @@
 #include "ThreeFrameAX.h"
 #include "ThreeFrameOO.h"
 #include "ContourFinder.h"
+#include "Benchmark.h"
 
 // TODO: Reference additional headers your program requires here.

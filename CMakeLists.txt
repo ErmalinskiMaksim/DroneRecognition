@@ -12,7 +12,7 @@ endif()
 project ("DroneRecognition")
 
 # Add source to this project's executable.
-add_executable (DroneRecognition "src/DroneRecognition.cpp" "headers/DroneRecognition.h" "src/ThreeFrameAX.cpp" "headers/ThreeFrameAX.h" "headers/ThreeFrameOO.h" "src/ThreeFrameOO.cpp" "headers/ThreeFrameDetector.h" "src/ThreeFrameDetector.cpp" "headers/ContourFinder.h"  "src/ContourFinder.cpp" "headers/TwoFrameMaskDetector.h"  "src/TwoFrameMaskDetector.cpp" "headers/Deflickerer.h" "src/Deflickerer.cpp")
+add_executable (DroneRecognition "src/DroneRecognition.cpp" "headers/DroneRecognition.h" "src/ThreeFrameAX.cpp" "headers/ThreeFrameAX.h" "headers/ThreeFrameOO.h" "src/ThreeFrameOO.cpp" "headers/ThreeFrameDetector.h" "src/ThreeFrameDetector.cpp" "headers/ContourFinder.h"  "src/ContourFinder.cpp" "headers/TwoFrameMaskDetector.h"  "src/TwoFrameMaskDetector.cpp" "headers/Deflickerer.h" "src/Deflickerer.cpp" "headers/Benchmark.h" "src/Benchmark.cpp")
 
 target_link_libraries(DroneRecognition  ${CMAKE_SOURCE_DIR}/Dependencies/OpenCV/lib/opencv_core490d.lib)
 target_link_libraries(DroneRecognition  ${CMAKE_SOURCE_DIR}/Dependencies/OpenCV/lib/opencv_highgui490d.lib)

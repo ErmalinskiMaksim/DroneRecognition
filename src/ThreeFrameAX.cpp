@@ -27,9 +27,9 @@ cv::Mat ThreeFrameAX::run()
 
 	//cv::threshold(xor23, xor23, 100, 255, 0);
 	cv::bitwise_and(m_and12, m_xor23, and14);
-	cv::imshow("and12", m_and12);
-	cv::imshow("xor23", m_xor23);
-	cv::imshow("and14", and14);
+	//cv::imshow("and12", m_and12);
+	//cv::imshow("xor23", m_xor23);
+	//cv::imshow("and14", and14);
 
 	return and14;
 }

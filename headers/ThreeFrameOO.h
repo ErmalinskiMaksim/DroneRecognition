@@ -10,7 +10,7 @@ public:
 	ThreeFrameOO(const ThreeFrameOO&) = delete;
 	ThreeFrameOO(ThreeFrameOO&&) = delete;
 	// accepts 3-channel colored images and converts internally into 1-channel gray
-	ThreeFrameOO(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
+	explicit ThreeFrameOO(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
 	~ThreeFrameOO();
 
 	cv::Mat run() override;
