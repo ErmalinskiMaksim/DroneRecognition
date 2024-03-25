@@ -8,7 +8,7 @@
 class SmartTracker
 {
 public:
-	SmartTracker(const cv::Mat& frame) : /*m_Retina{cv::bioinspired::Retina::create(frame.size())},*/m_tracker{cv::TrackerKCF::create()}, m_detector(frame, frame, frame)
+	SmartTracker(const cv::Mat& frame) : /*m_Retina{cv::bioinspired::Retina::create(frame.size())},*/m_tracker{cv::TrackerKCF::create()}, m_detector(frame, frame, frame), m_roi{0, 0, 0, 0}
 	{
 		//retina parameters management methods use sample
 		  //-> save current (here default) retina parameters to a xml file (you may use it only one time to get the file and modify it)
@@ -18,7 +18,7 @@ public:
 		//reset all retina buffers (open your eyes)  
 		//m_Retina->clearBuffers();
 	}
-	void run(cv::Mat& frame, cv::Mat& outputFrame)
+	void run(cv::Mat& frame)
 	{
 		if (m_captured)
 		{
@@ -32,6 +32,13 @@ public:
 		}
 		else
 		{
+			m_detector.update(frame);
+			auto filtered = m_detector.run();
+			if (m_cf.drawContours(filtered, frame))
+			{
+				m_roi = m_cf.getROI();
+				m_captured = true;
+			}
 			//// run retina on the input image
 			//m_Retina->run(frame);
 			////grab retina outputs
@@ -50,9 +57,8 @@ private:
 	//cv::Ptr<cv::bioinspired::Retina> m_Retina;
 	cv::Ptr<cv::Tracker> m_tracker;
 	ThreeFrameOO m_detector;
-	//TwoFrameMaskDetector m_detector;
+	ContoursFinder m_cf;
 	//cv::Mat m_retinaBuffer{};
-	//cv::Mat m_diffBuff{};
 	cv::Rect m_roi;
 	bool m_captured = false;
 	bool isFirstCapture = true;
@@ -68,26 +74,22 @@ int main()
 	/*int frameWidth = videoCapture.get(cv::CAP_PROP_FRAME_WIDTH);
 	int frameHeight = videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT);
 	cv::VideoWriter output("TwoFrame.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, cv::Size(frameWidth, frameHeight));*/
-	//SmartTracker tracker(frame);
 
 	videoCapture >> frame;
-	//ThreeFrameAX analyser(first, second, third);
+	//SmartTracker tracker(frame);
+	//ThreeFrameAX analyser(frame, frame, frame);
 	ThreeFrameOO analyser(frame, frame, frame);
 	ContoursFinder cf;
 	//TwoFrameMaskDetector detector(third, third);
 	//Benchmark benchmark;
+	
 	//main processing loop
 	while (videoCapture.read(frame))
 	{
 		analyser.update(frame);
-		//benchmark.start();
 		filtered = analyser.run();
-		//filtered = analyser.run();
-		//benchmark.reset();
-			
 		cf.drawContours(filtered, frame);
-		////tracker.run(frameGray, frame);
-		//cv::imshow("filtered", filtered);
+		//tracker.run(frame);
 
 		//output << third;
 		cv::imshow("Output", frame);

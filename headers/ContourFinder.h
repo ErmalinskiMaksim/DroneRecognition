@@ -7,7 +7,8 @@
 class ContoursFinder
 {
 public:
-	void drawContours(const cv::Mat& gray, cv::Mat& output);
+	bool drawContours(const cv::Mat& gray, cv::Mat& output);
+	const cv::Rect& getROI() const;
 private:
 	cv::Rect m_roi{};
 	std::vector<std::vector<cv::Point>> m_contours{};

@@ -18,18 +18,18 @@ ThreeFrameAX::ThreeFrameAX(const cv::Mat& first, const cv::Mat& second, const cv
 
 cv::Mat ThreeFrameAX::run()
 {
-	cv::Mat and14;
+	cv::Mat filtered;
  
 	cv::threshold(m_diff12, m_diff12, 50, 255, 0);
 	cv::threshold(m_diff23, m_diff23, 50, 255, 0);
 	cv::bitwise_and(m_diff12, m_diff23, m_and12);
-	cv::bitwise_xor(m_diff23, m_and12, m_xor23);
+	cv::bitwise_xor(m_diff23, m_and12, m_xor23); 
+	cv::dilate(m_xor23, m_xor23, cv::getStructuringElement(cv::MORPH_ELLIPSE, { 7, 7 })); // CROSS or ELLIPSE
 
-	//cv::threshold(xor23, xor23, 100, 255, 0);
-	cv::bitwise_and(m_and12, m_xor23, and14);
-	//cv::imshow("and12", m_and12);
-	//cv::imshow("xor23", m_xor23);
-	//cv::imshow("and14", and14);
+	//cv::blur(m_xor23, filtered, { 5, 5 });
+	//cv::threshold(filtered, filtered, 50, 255, 0);
+	//cv::bitwise_and(m_and12, m_xor23, and14);
 
-	return and14;
+
+	return m_xor23;
 }

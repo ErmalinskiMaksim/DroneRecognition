@@ -18,6 +18,8 @@ private:
 	cv::Mat m_or12;
 	cv::Mat m_or23;
 
+	cv::Mat m_prevOr23;
+
 	cv::Mat m_fgMask;
 	cv::Ptr<cv::BackgroundSubtractor> m_subtractor;
 };
