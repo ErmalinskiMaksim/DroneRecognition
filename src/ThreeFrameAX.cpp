@@ -11,14 +11,14 @@ ThreeFrameAX::~ThreeFrameAX()
 	m_prevFrame.release();
 }
 
-ThreeFrameAX::ThreeFrameAX(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third)
+ThreeFrameAX::ThreeFrameAX(const cv::UMat& first, const cv::UMat& second, const cv::UMat& third)
 {
 	init(first, second, third);
 }
 
-cv::Mat ThreeFrameAX::run()
+cv::UMat ThreeFrameAX::run()
 {
-	cv::Mat filtered;
+	cv::UMat filtered;
  
 	cv::threshold(m_diff12, m_diff12, 50, 255, 0);
 	cv::threshold(m_diff23, m_diff23, 50, 255, 0);

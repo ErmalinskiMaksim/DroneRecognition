@@ -1,6 +1,6 @@
 #include "../headers/ThreeFrameDetector.h"
 
-void ThreeFrameDetector::update(const cv::Mat& frame)
+void ThreeFrameDetector::update(const cv::UMat& frame)
 {
 	m_currentFrame.copyTo(m_prevFrame);
 	cv::cvtColor(frame, m_currentFrame, cv::COLOR_BGR2GRAY);
@@ -9,7 +9,7 @@ void ThreeFrameDetector::update(const cv::Mat& frame)
 	cv::absdiff(m_prevFrame, m_currentFrame, m_diff23);
 }
 
-void ThreeFrameDetector::init(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third)
+void ThreeFrameDetector::init(const cv::UMat& first, const cv::UMat& second, const cv::UMat& third)
 {
 	cv::cvtColor(first, m_currentFrame, cv::COLOR_BGR2GRAY);
 	cv::cvtColor(second, m_prevFrame, cv::COLOR_BGR2GRAY);

@@ -5,10 +5,10 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/bioinspired.hpp"
 
-class SmartTracker
+class SmartTracker // : public cv::DetectionBasedTracker::IDetector
 {
 public:
-	SmartTracker(const cv::Mat& frame) : /*m_Retina{cv::bioinspired::Retina::create(frame.size())},*/m_tracker{cv::TrackerKCF::create()}, m_detector(frame, frame, frame), m_roi{0, 0, 0, 0}
+	SmartTracker(const cv::UMat& frame) : /*m_Retina{cv::bioinspired::Retina::create(frame.size())},*/m_tracker{cv::TrackerKCF::create()}, m_detector(frame, frame, frame), m_roi{0, 0, 1, 1}
 	{
 		//retina parameters management methods use sample
 		  //-> save current (here default) retina parameters to a xml file (you may use it only one time to get the file and modify it)
@@ -18,7 +18,7 @@ public:
 		//reset all retina buffers (open your eyes)  
 		//m_Retina->clearBuffers();
 	}
-	void run(cv::Mat& frame)
+	void run(cv::UMat& frame)
 	{
 		if (m_captured)
 		{
@@ -66,23 +66,19 @@ private:
 
 int main()
 {
-	cv::Mat frame;
+	cv::VideoCapture videoCapture("test_data/LED.mkv");
+	const int frameWidth = videoCapture.get(cv::CAP_PROP_FRAME_WIDTH);
+	const int frameHeight = videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT);
+	//cv::VideoWriter output("rendered/led.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, { frameWidth, frameHeight });
+
+	cv::UMat frame(frameWidth, frameHeight, CV_8UC1);
+	cv::UMat filtered(frameWidth, frameHeight, CV_8UC1);
+	cv::UMat ff(frameWidth, frameHeight, CV_8UC1);
 	
-	cv::Mat filtered;
-	cv::VideoCapture videoCapture("test_data/2024-02-28 20-10-56.mkv");
-
-	/*int frameWidth = videoCapture.get(cv::CAP_PROP_FRAME_WIDTH);
-	int frameHeight = videoCapture.get(cv::CAP_PROP_FRAME_HEIGHT);
-	cv::VideoWriter output("TwoFrame.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, cv::Size(frameWidth, frameHeight));*/
-
 	videoCapture >> frame;
-	//SmartTracker tracker(frame);
-	//ThreeFrameAX analyser(frame, frame, frame);
 	ThreeFrameOO analyser(frame, frame, frame);
 	ContoursFinder cf;
-	//TwoFrameMaskDetector detector(third, third);
-	//Benchmark benchmark;
-	
+
 	//main processing loop
 	while (videoCapture.read(frame))
 	{
@@ -90,12 +86,11 @@ int main()
 		filtered = analyser.run();
 		cf.drawContours(filtered, frame);
 		//tracker.run(frame);
-
-		//output << third;
+		
+		//output << frame;
 		cv::imshow("Output", frame);
 		cv::waitKey(5);
 	}
-	//benchmark.write("twoFrame.txt");
 	videoCapture.release();
 	//output.release();
 	cv::destroyAllWindows();

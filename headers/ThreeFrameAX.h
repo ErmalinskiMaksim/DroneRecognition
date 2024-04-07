@@ -12,10 +12,10 @@ public:
 	ThreeFrameAX(ThreeFrameAX&&) = delete;
 	~ThreeFrameAX();
 	// accepts 3-channel images and internally converts them to 1-channel gray
-	explicit ThreeFrameAX(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
-	cv::Mat run() override;
+	explicit ThreeFrameAX(const cv::UMat& first, const cv::UMat& second, const cv::UMat& third);
+	cv::UMat run() override;
 private:
-	cv::Mat m_and12;
-	cv::Mat m_xor23;
+	cv::UMat m_and12;
+	cv::UMat m_xor23;
 };
 #endif // !THREEFRAMEAX

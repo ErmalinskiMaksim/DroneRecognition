@@ -10,17 +10,15 @@ public:
 	ThreeFrameOO(const ThreeFrameOO&) = delete;
 	ThreeFrameOO(ThreeFrameOO&&) = delete;
 	// accepts 3-channel colored images and converts internally into 1-channel gray
-	explicit ThreeFrameOO(const cv::Mat& first, const cv::Mat& second, const cv::Mat& third);
+	explicit ThreeFrameOO(const cv::UMat& first, const cv::UMat& second, const cv::UMat& third);
 	~ThreeFrameOO();
 
-	cv::Mat run() override;
+	cv::UMat run() override;
 private:
-	cv::Mat m_or12;
-	cv::Mat m_or23;
+	cv::UMat m_or12;
+	cv::UMat m_or23;
 
-	cv::Mat m_prevOr23;
-
-	cv::Mat m_fgMask;
+	cv::UMat m_fgMask;
 	cv::Ptr<cv::BackgroundSubtractor> m_subtractor;
 };
 
